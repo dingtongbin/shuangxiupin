@@ -1,0 +1,55 @@
+# 主前端（web）托管发布到 GitHub Pages：https://<owner>.github.io/<repo>/
+# 仅发布主前端；后端（server）需自行部署到服务器，管理端（admin）仅内网使用，两者都不走 CI 发布。
+name: Deploy Web to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build（子路径 + 可选后端地址）
+        working-directory: web
+        env:
+          # 可选：在仓库 Settings → Secrets and variables → Actions → Variables
+          # 配置 API_BASE（如 https://api.example.com），前端将指向该后端；
+          # 不配置则为纯静态演示（接口请求同域，会失败）。
+          VITE_API_BASE: ${{ vars.API_BASE }}
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          npm ci
+          npx tsc --noEmit
+          npm run build -- --base=/$REPO_NAME/
+          # SPA 兜底：GitHub Pages 对未知路径返回 404.html
+          cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

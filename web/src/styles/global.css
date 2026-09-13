@@ -1,0 +1,218 @@
+/* 双休聘 全局设计变量与基础样式 */
+:root {
+  /* 主题色：默认蓝，可在「设置 → 主题配色」更换（写入 --sxu-primary） */
+  --sxu-primary: #1677ff;
+  --sxu-primary-weak: color-mix(in srgb, var(--sxu-primary) 10%, #ffffff);
+  --sxu-primary-shadow: color-mix(in srgb, var(--sxu-primary) 35%, transparent);
+
+  /* 业务语义色：不随主题变化（双休=绿、单休=红、不定=红黑渐变） */
+  --sxu-green: #0a7d43;
+  --sxu-green-weak: #e8f5ee;
+  --sxu-red: #e0342f;
+  --sxu-red-weak: #fdeceb;
+
+  --sxu-ink: #1a1a1a;
+  --sxu-sub: #8a8f99;
+  --sxu-bg: #f6f7f9;
+  --sxu-card: #ffffff;
+  --sxu-line: #eef0f3;
+  --sxu-radius: 12px;
+  --sxu-gap: 12px;
+}
+
+/* 让 antd-mobile 全部组件跟随主题色 */
+:root:root {
+  --adm-color-primary: var(--sxu-primary);
+}
+
+/* 夜间模式：index.html 内联脚本跟随系统把 data-prefers-color-scheme 同步到 <html>，
+   antd-mobile 官方暗色变量（html[data-prefers-color-scheme='dark']）自动生效；
+   这里只补齐自有表面/文字变量。品牌色与双休绿/单休红语义色深浅不变。 */
+html[data-prefers-color-scheme="dark"] {
+  --sxu-bg: #0f1114;
+  --sxu-card: #1a1d22;
+  --sxu-ink: #e6e8ec;
+  --sxu-sub: #98a0ab;
+  --sxu-line: #262b33;
+
+  /* 品牌浅底改为暗色混合，语义浅底改为暗色同系 */
+  --sxu-primary-weak: color-mix(in srgb, var(--sxu-primary) 22%, #16181d);
+  --sxu-green-weak: #12271b;
+  --sxu-red-weak: #2e1514;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--sxu-bg);
+  color: var(--sxu-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue",
+    "Microsoft YaHei", sans-serif;
+  font-size: 15px;
+}
+
+/* 移动端主容器：手机上全屏铺满；宽屏（PC 预览）按手机宽度居中展示 */
+.sxu-page {
+  min-height: 100%;
+  background: var(--sxu-bg);
+}
+
+/* 宽屏降级：以“手机画布”居中呈现，深色衬底 + 投影，保持手机比例不拉伸 */
+@media (min-width: 521px) {
+  html,
+  body,
+  #root {
+    background: #17191f;
+  }
+  .sxu-page {
+    max-width: 480px;
+    min-height: 100vh;
+    margin: 0 auto;
+    box-shadow: 0 0 48px rgba(0, 0, 0, 0.45);
+  }
+  .sxu-footer-bar {
+    width: auto;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .sxu-fab {
+    right: calc(50% - 240px + 16px);
+  }
+}
+
+.sxu-card {
+  background: var(--sxu-card);
+  border-radius: var(--sxu-radius);
+  padding: 14px;
+  margin: var(--sxu-gap);
+}
+
+/* 职位卡片：左右外间距与内边距更紧凑，增大可视面积（首页/搜索结果/招聘管理共用） */
+.sxu-job-card {
+  padding: 10px 12px;
+  margin: 0 8px;
+}
+
+/* 信息流卡片（问答/点评）：外边距与内边距收紧 */
+.sxu-feed-card {
+  padding: 12px;
+  margin: 0 8px;
+}
+
+/* 懒渲染：视口外卡片跳过渲染 */
+.sxu-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 108px;
+}
+
+.sxu-sub {
+  color: var(--sxu-sub);
+  font-size: 12px;
+}
+
+.sxu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sxu-ellipsis2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 双休/单休/不定 徽标（语义色固定：绿=双休、红=单休、红黑=不定） */
+.sxu-rest {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sxu-rest-double {
+  background: var(--sxu-green);
+}
+.sxu-rest-single {
+  background: var(--sxu-red);
+}
+.sxu-rest-unset {
+  background: linear-gradient(90deg, var(--sxu-red) 0%, #2b2b2b 100%);
+}
+
+/* 底部操作栏（详情页评论输入等） */
+.sxu-footer-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: var(--sxu-card);
+  border-top: 1px solid var(--sxu-line);
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.sxu-page-body {
+  padding-bottom: 72px; /* tabbar 高度 */
+}
+
+.adm-tab-bar {
+  --adm-tab-bar-background-color: var(--sxu-card);
+}
+
+/* 右对齐的下划线 Tabs（如问答的回答排序） */
+.sxu-tabs-right .adm-tabs-tab-list {
+  justify-content: flex-end;
+}
+.sxu-tabs-right .adm-tabs-tab-wrapper {
+  flex: 0 0 auto;
+}
+
+/* 广场 tab 徽标点 */
+.sxu-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 88px;
+  z-index: 9;
+}
+
+.sxu-logo-badge {
+  background: var(--sxu-primary-weak);
+  color: var(--sxu-primary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.sxu-link {
+  color: var(--sxu-primary);
+  text-decoration: none;
+}
+
+/* 页头固定：所有 NavBar 不随内容滚动 */
+.adm-nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--sxu-card);
+}
