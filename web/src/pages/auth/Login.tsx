@@ -49,8 +49,7 @@ export default function Login() {
           alt="双休聘"
           style={{ width: 64, height: 64, borderRadius: 16, display: "block" }}
         />
-        <h1 style={{ fontSize: 24, margin: "18px 0 4px" }}>登录双休聘</h1>
-        <p className="sxu-sub" style={{ margin: 0 }}>只找双休好工作，看真实企业点评</p>
+        <h1 style={{ fontSize: 24, margin: "18px 0 0" }}>登录双休聘</h1>
       </div>
 
       <div style={{ marginTop: 36, display: "flex", flexDirection: "column", gap: 14 }}>

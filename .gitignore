@@ -1,5 +1,6 @@
 # Go
-bin/
+/bin/
+/server/bin/
 *.test
 *.out
 
@@ -7,15 +8,18 @@ bin/
 server/configs/config.yaml
 server/configs/admin.yaml
 
-# 本地数据与日志
-data/
-logs/
+# 本地数据与日志（仅根目录与 server/，避免误伤 web/src/data 等源码目录）
+/data/
+/logs/
+/server/data/
+/server/logs/
 *.log
 
 # 前端
 node_modules/
 web/dist/
 admin/dist/
+.vite/
 web/.env.local
 web/.env.*.local
 

@@ -1,6 +1,5 @@
 # 双休聘 ShuangXiuPin
 
-> 只找双休好工作，看真实企业点评。
 > 一个聚焦「双休 / 单休 / 不定」的招聘 + 企业点评社区，移动端 H5（WebView 壳上架）。
 
 ![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)
