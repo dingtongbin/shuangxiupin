@@ -1,0 +1,60 @@
+# 全量 CI 校验：后端 / 主前端 / 管理端，所有内容提交都必须通过本工作流。
+# （注意：本工作流只做构建与检查，不做任何部署发布。）
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  server:
+    name: Server（Go 构建 + vet + test）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27"
+          cache-dependency-path: server/go.sum
+      - name: Build & Vet & Test
+        working-directory: server
+        run: |
+          go build ./...
+          go vet ./...
+          go test ./...
+
+  web:
+    name: Web（类型检查 + 构建）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Typecheck & Build
+        working-directory: web
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npm run build
+
+  admin:
+    name: Admin（类型检查 + 构建，仅校验不发布）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+      - name: Typecheck & Build
+        working-directory: admin
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npm run build

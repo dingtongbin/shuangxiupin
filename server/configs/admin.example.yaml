@@ -1,0 +1,57 @@
+# 系统管理控制台（独立进程）配置：复制为 admin.yaml 后按环境修改
+server:
+  addr: ":8090"                 # 独立端口；建议防火墙仅放行内网
+  mode: debug
+  admin_static_dir: "../admin/dist"  # PC 控制台产物（admin/ npm run build）
+  trusted_proxies: []           # 留空=不信任代理头（内网限制按直连 IP 判断）
+
+mysql:
+  dsn: "sxu:sxu_dev_2026@tcp(127.0.0.1:3306)/shuangxiupin?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  addr: "127.0.0.1:6379"
+  password: ""
+  db: 0
+
+session:
+  name: sxu_session             # 与主服务一致：同一 Redis 会话互通
+  ttl_hours: 168
+  secure: false
+  domain: ""
+
+mail:
+  enabled: false
+  host: "smtp.163.com"
+  port: 465
+  username: ""
+  password: ""
+  from: ""
+  ssl: true
+  notify_to: ""
+
+storage:
+  driver: local
+  local_dir: "./data/uploads"
+  local_url_prefix: "/uploads"
+  max_mb: 5
+  minio:
+    endpoint: "127.0.0.1:9000"
+    access_key: ""
+    secret_key: ""
+    bucket: "shuangxiupin"
+    use_ssl: false
+    public_base: ""
+
+search:
+  driver: db
+
+log:
+  level: info
+  format: text
+
+seed:
+  admin_email: "admin@shuangxiupin.cn"
+  admin_password: "在此填写管理控制台初始密码"
+
+cors:
+  origins: []

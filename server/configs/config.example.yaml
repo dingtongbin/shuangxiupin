@@ -1,0 +1,63 @@
+# 双休聘后端配置样例：复制为 config.yaml 后按环境修改（config.yaml 不入库）
+server:
+  addr: ":8080"
+  mode: debug            # debug | release
+  static_dir: "../web/dist"       # 移动端 H5 产物
+  # PC 系统管理控制台为独立进程（cmd/admin + configs/admin.yaml，默认 :8090）
+  # 受信代理 CIDR；留空=不信任任何代理头（/api/sys 内网限制按直连 IP 判断）。
+  # 若部署在 nginx 等反代后，请填反代地址（如 127.0.0.1/32），并确保外网无法访问 /api/sys。
+  trusted_proxies: []
+
+mysql:
+  dsn: "sxu:sxu_dev_2026@tcp(127.0.0.1:3306)/shuangxiupin?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  addr: "127.0.0.1:6379"
+  password: ""
+  db: 0
+
+session:
+  name: sxu_session
+  ttl_hours: 168         # 7 天滑动续期
+  secure: false          # HTTPS 部署时设 true
+  domain: ""
+
+mail:
+  enabled: false         # false 时验证码只打印到日志（本地开发）
+  host: "smtp.163.com"
+  port: 465
+  username: ""
+  password: ""           # SMTP 授权码
+  from: ""
+  ssl: true              # true=465 隐式 SSL；false=587 STARTTLS
+  notify_to: ""          # 我方运营通知邮箱（企业认证申请等）
+
+# 文件存储：local（默认，本地磁盘，由 /uploads 静态托管）或 minio（S3/MinIO 兼容）
+storage:
+  driver: local
+  local_dir: "./data/uploads"
+  local_url_prefix: "/uploads"
+  max_mb: 5
+  minio:
+    endpoint: "127.0.0.1:9000"
+    access_key: ""
+    secret_key: ""
+    bucket: "shuangxiupin"
+    use_ssl: false
+    public_base: ""   # 留空自动拼 http(s)://endpoint/bucket
+
+# 搜索驱动：db（SQL LIKE）。切换单点已预留，接入 Meilisearch/ES 时实现同形接口即可
+search:
+  driver: db
+
+log:
+  level: info            # debug | info | warn | error
+  format: text           # text | json
+
+seed:
+  admin_email: "admin@shuangxiupin.cn"   # 默认系统管理员（首登强制改密）
+  admin_password: "Sxu@2026!"
+
+cors:
+  origins:
+    - "http://localhost:5173"
