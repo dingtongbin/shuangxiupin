@@ -19,6 +19,7 @@ server/configs/admin.yaml
 node_modules/
 web/dist/
 admin/dist/
+.vite/
 web/.env.local
 web/.env.*.local
 
